@@ -279,6 +279,45 @@
               <!-- Caregiving Details Table -->
               <div class="table-container caregiving-details-container">
                 <h5 class="table-heading">Caregiving Details</h5>
+                <table class="data-table caregiving-table">
+                    <thead>
+                        <tr>
+                            <th>Member Name</th>
+                            <th>Services</th>
+                            <th>Hours</th>
+                            <th>Days</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="caregivingTableBody">
+                        <tr class="caregiving-row">
+                            <td>
+                                <input type="text" class="form-control" name="memberName" placeholder="Member Name">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="services" placeholder="Services">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="hours" placeholder="e.g., 9am-5pm">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="days" placeholder="e.g., Mon-Fri">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                <button type="button" id="addCaregivingDetail" class="btn btn-outline-primary btn-sm">
+                                    <i class="icon-plus"></i> Add Caregiving Detail
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
                 <p class="table-description">Specify the services, hours, and days each household member can assist with caregiving:</p>
                 
                 <table class="data-table caregiving-table">

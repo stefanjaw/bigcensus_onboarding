@@ -13,6 +13,41 @@ document.getElementById('referralOther').addEventListener('change', function() {
   }
 });
 
+// Caregiving Details Table Functions
+document.getElementById('addCaregivingDetail')?.addEventListener('click', () => {
+  const tbody = document.getElementById('caregivingTableBody');
+  const newRow = document.createElement('tr');
+  newRow.className = 'caregiving-row';
+  newRow.innerHTML = `
+    <td>
+      <input type="text" class="form-control" name="memberName" placeholder="Member Name">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="services" placeholder="Services">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="hours" placeholder="e.g., 9am-5pm">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="days" placeholder="e.g., Mon-Fri">
+    </td>
+    <td>
+      <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+    </td>
+  `;
+  tbody?.appendChild(newRow);
+});
+
+document.getElementById('caregivingTableBody')?.addEventListener('click', (e) => {
+  if (e.target.classList.contains('remove-row')) {
+    const row = e.target.closest('tr');
+    if (row && document.getElementById('caregivingTableBody')?.children.length > 1) {
+      row.remove();
+    }
+  }
+});
+
+
 // Add event listeners for the dementia radio buttons
 document.getElementById('dementiaYes').addEventListener('change', function() {
   if (this.checked) {
