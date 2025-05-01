@@ -1,0 +1,36 @@
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Patient Form Server"
+
+[[workflows.workflow]]
+name = "Patient Form Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node server.js"
+waitForPort = 5000
+
+[deployment]
+run = [
+  "sh",
+  "-c",
+  "npm install @angular/cli @angular/core @angular/common @angular/platform-browser @angular/platform-browser-dynamic @angular/forms @angular/compiler @angular/animations @angular/compiler-cli rxjs zone.js typescript reflect-metadata && npx ng serve --port 5000 --host 0.0.0.0 --disable-host-check",
+]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
