@@ -1,0 +1,132 @@
+<div class="patient-form-container">
+  <h2>Patient Onboarding Form</h2>
+  
+  <!-- Success Message -->
+  <div *ngIf="submitSuccess" class="alert alert-success" role="alert">
+    <p>Thank you! Your information has been submitted successfully.</p>
+  </div>
+  
+  <!-- Error Message -->
+  <div *ngIf="submitError" class="alert alert-danger" role="alert">
+    <p>There was an error submitting your information. Please try again.</p>
+    <p *ngIf="errorMessage">Error: {{ errorMessage }}</p>
+  </div>
+  
+  <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Patient Information Section -->
+    <section class="form-section" formGroupName="patientInfo">
+      <h3>Patient Information</h3>
+      
+      <div class="form-group">
+        <label for="firstName">First Name <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="firstName" 
+          formControlName="firstName" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': submitted && patientInfo['firstName'].errors}"
+        >
+        <div *ngIf="submitted && patientInfo['firstName'].errors" class="invalid-feedback">
+          <div *ngIf="patientInfo['firstName'].errors['required']">First name is required</div>
+          <div *ngIf="patientInfo['firstName'].errors['minlength']">First name must be at least 2 characters</div>
+          <div *ngIf="patientInfo['firstName'].errors['maxlength']">First name cannot exceed 50 characters</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="lastName">Last Name <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="lastName" 
+          formControlName="lastName" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': submitted && patientInfo['lastName'].errors}"
+        >
+        <div *ngIf="submitted && patientInfo['lastName'].errors" class="invalid-feedback">
+          <div *ngIf="patientInfo['lastName'].errors['required']">Last name is required</div>
+          <div *ngIf="patientInfo['lastName'].errors['minlength']">Last name must be at least 2 characters</div>
+          <div *ngIf="patientInfo['lastName'].errors['maxlength']">Last name cannot exceed 50 characters</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="middleInitial">Middle Initial</label>
+        <input 
+          type="text" 
+          id="middleInitial" 
+          formControlName="middleInitial" 
+          class="form-control" 
+          maxlength="1"
+          [ngClass]="{'is-invalid': submitted && patientInfo['middleInitial'].errors}"
+        >
+        <div *ngIf="submitted && patientInfo['middleInitial'].errors" class="invalid-feedback">
+          <div *ngIf="patientInfo['middleInitial'].errors['maxlength']">Middle initial must be a single character</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Emergency Contact Section -->
+    <section class="form-section" formGroupName="emergencyContact">
+      <h3>Emergency Contact Information</h3>
+      
+      <div class="form-group">
+        <label for="contactName">Contact Person Name <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="contactName" 
+          formControlName="name" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': submitted && emergencyContact['name'].errors}"
+        >
+        <div *ngIf="submitted && emergencyContact['name'].errors" class="invalid-feedback">
+          <div *ngIf="emergencyContact['name'].errors['required']">Contact name is required</div>
+          <div *ngIf="emergencyContact['name'].errors['minlength']">Contact name must be at least 2 characters</div>
+          <div *ngIf="emergencyContact['name'].errors['maxlength']">Contact name cannot exceed 100 characters</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="relationship">Relationship <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="relationship" 
+          formControlName="relationship" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': submitted && emergencyContact['relationship'].errors}"
+        >
+        <div *ngIf="submitted && emergencyContact['relationship'].errors" class="invalid-feedback">
+          <div *ngIf="emergencyContact['relationship'].errors['required']">Relationship is required</div>
+          <div *ngIf="emergencyContact['relationship'].errors['minlength']">Relationship must be at least 2 characters</div>
+          <div *ngIf="emergencyContact['relationship'].errors['maxlength']">Relationship cannot exceed 50 characters</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="phoneNumber">Contact Phone (Day-time) <span class="required">*</span></label>
+        <input 
+          type="tel" 
+          id="phoneNumber" 
+          formControlName="phoneNumber" 
+          class="form-control" 
+          placeholder="(123) 456-7890"
+          [ngClass]="{'is-invalid': submitted && emergencyContact['phoneNumber'].errors}"
+        >
+        <div *ngIf="submitted && emergencyContact['phoneNumber'].errors" class="invalid-feedback">
+          <div *ngIf="emergencyContact['phoneNumber'].errors['required']">Phone number is required</div>
+          <div *ngIf="emergencyContact['phoneNumber'].errors['pattern']">Please enter a valid phone number</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">
+        Clear Form
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        {{ loading ? 'Submitting...' : 'Submit' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,2336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Onboarding Portal</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="container">
+        <h1>Patient Onboarding Portal</h1>
+      </div>
+    </header>
+    
+    <main class="container">
+      <div class="patient-form-container">
+        <h2>Patient Onboarding Form</h2>
+        
+        <!-- Success Message -->
+        <div id="successMessage" class="alert alert-success" style="display: none;">
+          <p>Thank you! Your information has been submitted successfully.</p>
+        </div>
+        
+        <!-- Error Message -->
+        <div id="errorMessage" class="alert alert-danger" style="display: none;">
+          <p>There was an error submitting your information. Please try again.</p>
+          <p id="errorDetails"></p>
+        </div>
+        
+        <form id="patientForm" novalidate>
+          <!-- Print View Container (hidden by default) -->
+          <div id="printView" class="print-view"></div>
+          <!-- Patient Information Section -->
+          <section class="form-section">
+            <h3>Patient Information</h3>
+            
+            <div class="form-group">
+              <label for="firstName">First Name <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="firstName" 
+                name="firstName" 
+                class="form-control"
+                required
+                minlength="2"
+                maxlength="50"
+              >
+              <div class="invalid-feedback" id="firstNameError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName">Last Name <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                class="form-control"
+                required
+                minlength="2"
+                maxlength="50"
+              >
+              <div class="invalid-feedback" id="lastNameError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="middleInitial">Middle Initial</label>
+              <input 
+                type="text" 
+                id="middleInitial" 
+                name="middleInitial" 
+                class="form-control" 
+                maxlength="1"
+              >
+              <div class="invalid-feedback" id="middleInitialError"></div>
+            </div>
+          </section>
+          
+          <!-- Emergency Contact Section -->
+          <section class="form-section">
+            <h3>Emergency Contact Information</h3>
+            
+            <div class="form-group">
+              <label for="contactName">Contact Person Name <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="contactName" 
+                name="contactName" 
+                class="form-control"
+                required
+                minlength="2"
+                maxlength="100"
+              >
+              <div class="invalid-feedback" id="contactNameError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="relationship">Relationship <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="relationship" 
+                name="relationship" 
+                class="form-control"
+                required
+                minlength="2"
+                maxlength="50"
+              >
+              <div class="invalid-feedback" id="relationshipError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="phoneNumber">Contact Phone (Day-time) <span class="required">*</span></label>
+              <input 
+                type="tel" 
+                id="phoneNumber" 
+                name="phoneNumber" 
+                class="form-control" 
+                placeholder="(123) 456-7890"
+                required
+                pattern="^[0-9\-\(\)\s\+\.]+$"
+              >
+              <div class="invalid-feedback" id="phoneNumberError"></div>
+            </div>
+          </section>
+          
+          <!-- Living Situation Section -->
+          <section class="form-section">
+            <h3>Living Situation</h3>
+            
+            <!-- Dwelling Type -->
+            <div class="form-group">
+              <label>Dwelling <span class="required">*</span></label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="dwellingApartment" name="dwelling" value="apartment">
+                  <label for="dwellingApartment">Apartment</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="dwellingHouse" name="dwelling" value="house">
+                  <label for="dwellingHouse">House</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="dwellingOther" name="dwelling" value="other">
+                  <label for="dwellingOther">Other</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="dwellingError"></div>
+            </div>
+            
+            <!-- Other Dwelling Type (Conditional Field) -->
+            <div class="form-group" id="otherDwellingGroup" style="display:none;">
+              <label for="otherDwelling">Please specify: </label>
+              <input 
+                type="text" 
+                id="otherDwelling" 
+                name="otherDwelling" 
+                class="form-control"
+              >
+              <div class="invalid-feedback" id="otherDwellingError"></div>
+            </div>
+            
+            <!-- Floor -->
+            <div class="form-group">
+              <label for="floor">Floor</label>
+              <input 
+                type="text" 
+                id="floor" 
+                name="floor" 
+                class="form-control"
+              >
+              <div class="invalid-feedback" id="floorError"></div>
+            </div>
+            
+            <!-- Number of Rooms -->
+            <div class="form-group">
+              <label for="numberOfRooms">Number of Rooms</label>
+              <input 
+                type="number" 
+                id="numberOfRooms" 
+                name="numberOfRooms" 
+                class="form-control"
+                min="1"
+              >
+              <div class="invalid-feedback" id="numberOfRoomsError"></div>
+            </div>
+            
+            <!-- Elevator -->
+            <div class="form-group">
+              <label>Elevator</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="elevatorYes" name="elevator" value="yes">
+                  <label for="elevatorYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="elevatorNo" name="elevator" value="no">
+                  <label for="elevatorNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="elevatorError"></div>
+            </div>
+            
+            <!-- Lives Alone -->
+            <div class="form-group">
+              <label>Lives Alone</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="livesAloneYes" name="livesAlone" value="yes">
+                  <label for="livesAloneYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="livesAloneNo" name="livesAlone" value="no" checked>
+                  <label for="livesAloneNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="livesAloneError"></div>
+            </div>
+            
+            <!-- Household Members and Caregiving -->
+            <div id="householdSection">
+              <h4>Household Members and Caregiving</h4>
+              <p class="section-description">Identify all individuals living in the home and list the services, hours, and days they are available to assist with care giving:</p>
+              
+              <!-- Household Members Table -->
+              <div class="table-container">
+                <h5 class="table-heading">Household Members</h5>
+                <table class="data-table household-table">
+                  <thead>
+                    <tr>
+                      <th width="5%">#</th>
+                      <th width="35%">Full Name <span class="required">*</span></th>
+                      <th width="35%">Relationship to Patient</th>
+                      <th width="25%">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="householdTableBody">
+                    <tr class="household-row" data-index="0">
+                      <td>1</td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="memberName0" 
+                          name="householdMembers[0].name" 
+                          class="form-control"
+                          required
+                        >
+                        <div class="invalid-feedback" id="memberNameError0"></div>
+                      </td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="memberRelationship0" 
+                          name="householdMembers[0].relationship" 
+                          class="form-control"
+                          placeholder="e.g., Spouse, Child, Parent"
+                        >
+                      </td>
+                      <td class="action-cell">
+                        <button type="button" class="btn btn-outline-info btn-sm edit-caregiving" data-index="0">
+                          Caregiving
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="4">
+                        <button type="button" id="addHouseholdMember" class="btn btn-outline-primary btn-sm">
+                          <i class="icon-plus"></i> Add Household Member
+                        </button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              
+              <!-- Caregiving Details Table -->
+              <div class="table-container caregiving-details-container">
+                <h5 class="table-heading">Caregiving Details</h5>
+                <p class="table-description">Specify the services, hours, and days each household member can assist with caregiving:</p>
+                
+                <table class="data-table caregiving-table">
+                  <thead>
+                    <tr>
+                      <th width="5%">#</th>
+                      <th width="20%">Household Member</th>
+                      <th width="35%">Services They Can Assist With</th>
+                      <th width="20%">Available Hours</th>
+                      <th width="20%">Available Days</th>
+                    </tr>
+                  </thead>
+                  <tbody id="caregivingTableBody">
+                    <tr class="caregiving-row" data-index="0">
+                      <td>1</td>
+                      <td class="member-name-display">-</td>
+                      <td>
+                        <textarea 
+                          id="memberServices0" 
+                          name="householdMembers[0].services" 
+                          class="form-control"
+                          placeholder="e.g., Meal preparation, transportation, medication management"
+                          rows="2"
+                        ></textarea>
+                      </td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="memberHours0" 
+                          name="householdMembers[0].hours" 
+                          class="form-control"
+                          placeholder="e.g., 9am-5pm"
+                        >
+                      </td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="memberDays0" 
+                          name="householdMembers[0].days" 
+                          class="form-control"
+                          placeholder="e.g., Mon-Fri"
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Impairments -->
+          <section class="form-section">
+            <h3 class="section-title">Impairments</h3>
+            <p class="section-description">Please indicate the patient's impairments:</p>
+            
+            <!-- Sensory Impairments -->
+            <div class="impairment-subsection">
+              <h4 class="subsection-title">Sensory</h4>
+              
+              <!-- Speech -->
+              <div class="form-group">
+                <label>Speech</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="speechNone" name="speechImpairment" value="none">
+                    <label for="speechNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="speechPartial" name="speechImpairment" value="partial">
+                    <label for="speechPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="speechTotal" name="speechImpairment" value="total">
+                    <label for="speechTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="speechImpairmentError"></div>
+              </div>
+              
+              <!-- Sight -->
+              <div class="form-group">
+                <label>Sight</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="sightNone" name="sightImpairment" value="none">
+                    <label for="sightNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="sightPartial" name="sightImpairment" value="partial">
+                    <label for="sightPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="sightTotal" name="sightImpairment" value="total">
+                    <label for="sightTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="sightImpairmentError"></div>
+              </div>
+              
+              <!-- Hearing -->
+              <div class="form-group">
+                <label>Hearing</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="hearingNone" name="hearingImpairment" value="none">
+                    <label for="hearingNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="hearingPartial" name="hearingImpairment" value="partial">
+                    <label for="hearingPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="hearingTotal" name="hearingImpairment" value="total">
+                    <label for="hearingTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="hearingImpairmentError"></div>
+              </div>
+            </div>
+            
+            <!-- Muscular/Motor Impairments -->
+            <div class="impairment-subsection">
+              <h4 class="subsection-title">Muscular/Motor</h4>
+              
+              <!-- Hand/Arm -->
+              <div class="form-group">
+                <label>Hand/Arm</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="handArmNone" name="handArmImpairment" value="none">
+                    <label for="handArmNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="handArmPartial" name="handArmImpairment" value="partial">
+                    <label for="handArmPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="handArmTotal" name="handArmImpairment" value="total">
+                    <label for="handArmTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="handArmImpairmentError"></div>
+              </div>
+              
+              <!-- Upper Extremities -->
+              <div class="form-group">
+                <label>Upper Extremities</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="upperExtremitiesNone" name="upperExtremitiesImpairment" value="none">
+                    <label for="upperExtremitiesNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="upperExtremitiesPartial" name="upperExtremitiesImpairment" value="partial">
+                    <label for="upperExtremitiesPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="upperExtremitiesTotal" name="upperExtremitiesImpairment" value="total">
+                    <label for="upperExtremitiesTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="upperExtremitiesImpairmentError"></div>
+              </div>
+              
+              <!-- Lower Extremities -->
+              <div class="form-group">
+                <label>Lower Extremities</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="lowerExtremitiesNone" name="lowerExtremitiesImpairment" value="none">
+                    <label for="lowerExtremitiesNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="lowerExtremitiesPartial" name="lowerExtremitiesImpairment" value="partial">
+                    <label for="lowerExtremitiesPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="lowerExtremitiesTotal" name="lowerExtremitiesImpairment" value="total">
+                    <label for="lowerExtremitiesTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="lowerExtremitiesImpairmentError"></div>
+              </div>
+            </div>
+            
+            <!-- Cardiovascular / Respiratory Impairments -->
+            <div class="impairment-subsection">
+              <h4 class="subsection-title">Cardiovascular / Respiratory</h4>
+              
+              <!-- Respiratory -->
+              <div class="form-group">
+                <label>Respiratory</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="respiratoryNone" name="respiratoryImpairment" value="none">
+                    <label for="respiratoryNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="respiratoryPartial" name="respiratoryImpairment" value="partial">
+                    <label for="respiratoryPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="respiratoryTotal" name="respiratoryImpairment" value="total">
+                    <label for="respiratoryTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="respiratoryImpairmentError"></div>
+              </div>
+              
+              <!-- Cardiac -->
+              <div class="form-group">
+                <label>Cardiac</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="cardiacNone" name="cardiacImpairment" value="none">
+                    <label for="cardiacNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="cardiacPartial" name="cardiacImpairment" value="partial">
+                    <label for="cardiacPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="cardiacTotal" name="cardiacImpairment" value="total">
+                    <label for="cardiacTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="cardiacImpairmentError"></div>
+              </div>
+              
+              <!-- Circulatory -->
+              <div class="form-group">
+                <label>Circulatory</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="circulatoryNone" name="circulatoryImpairment" value="none">
+                    <label for="circulatoryNone">None</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="circulatoryPartial" name="circulatoryImpairment" value="partial">
+                    <label for="circulatoryPartial">Partial</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="circulatoryTotal" name="circulatoryImpairment" value="total">
+                    <label for="circulatoryTotal">Total</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="circulatoryImpairmentError"></div>
+              </div>
+              
+              <!-- Functional Impact -->
+              <div class="form-group">
+                <label for="cardioFunctionalImpact">Describe impact on functional ability</label>
+                <textarea 
+                  id="cardioFunctionalImpact" 
+                  name="cardioFunctionalImpact" 
+                  class="form-control"
+                  placeholder="Describe how these impairments affect the patient's daily activities"
+                  rows="3"
+                ></textarea>
+                <div class="invalid-feedback" id="cardioFunctionalImpactError"></div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Tuberculosis History Section -->
+          <section class="form-section">
+            <h3 class="section-title">Tuberculosis History</h3>
+            <p class="section-description">Please provide information about the patient's tuberculosis history:</p>
+            
+            <!-- History of Tuberculosis -->
+            <div class="form-group">
+              <label>Does patient have history of tuberculosis?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="tbHistoryYes" name="tbHistory" value="yes">
+                  <label for="tbHistoryYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="tbHistoryNo" name="tbHistory" value="no">
+                  <label for="tbHistoryNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="tbHistoryError"></div>
+            </div>
+            
+            <!-- TB History Type (conditional) -->
+            <div id="tbHistoryTypeGroup" class="form-group sub-field" style="display:none; margin-left: 2rem;">
+              <label>Type of tuberculosis history:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="tbHistoryPulmonary" name="tbHistoryType" value="pulmonary">
+                  <label for="tbHistoryPulmonary">Pulmonary</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="tbHistoryExtraPulmonary" name="tbHistoryType" value="extraPulmonary">
+                  <label for="tbHistoryExtraPulmonary">Extra Pulmonary</label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- TB Therapy Completion -->
+            <div class="form-group">
+              <label>Did patient complete therapy?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="tbCompletedTherapyYes" name="tbCompletedTherapy" value="yes">
+                  <label for="tbCompletedTherapyYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="tbCompletedTherapyNo" name="tbCompletedTherapy" value="no">
+                  <label for="tbCompletedTherapyNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="tbCompletedTherapyError"></div>
+            </div>
+            
+            <!-- Current Tuberculosis -->
+            <div class="form-group">
+              <label>Does patient currently have tuberculosis?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="currentTbYes" name="currentTb" value="yes">
+                  <label for="currentTbYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="currentTbNo" name="currentTb" value="no">
+                  <label for="currentTbNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="currentTbError"></div>
+            </div>
+            
+            <!-- Current TB Type (conditional) -->
+            <div id="currentTbTypeGroup" class="form-group sub-field" style="display:none; margin-left: 2rem;">
+              <label>Type of current tuberculosis:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="currentTbPulmonary" name="currentTbType" value="pulmonary">
+                  <label for="currentTbPulmonary">Pulmonary</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="currentTbExtraPulmonary" name="currentTbType" value="extraPulmonary">
+                  <label for="currentTbExtraPulmonary">Extra Pulmonary</label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- TB Prophylaxis -->
+            <div class="form-group">
+              <label>Is patient currently on tuberculosis prophylaxis?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="currentProphylaxisYes" name="currentProphylaxis" value="yes">
+                  <label for="currentProphylaxisYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="currentProphylaxisNo" name="currentProphylaxis" value="no">
+                  <label for="currentProphylaxisNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="currentProphylaxisError"></div>
+            </div>
+            
+            <!-- History of TB Prophylaxis -->
+            <div class="form-group">
+              <label>Hx of TB prophylaxis?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="prophylaxisHistoryYes" name="prophylaxisHistory" value="yes">
+                  <label for="prophylaxisHistoryYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="prophylaxisHistoryNo" name="prophylaxisHistory" value="no">
+                  <label for="prophylaxisHistoryNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="prophylaxisHistoryError"></div>
+            </div>
+            
+            <!-- PPD Documentation -->
+            <div class="form-group">
+              <label>Last documented PPD:</label>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="lastPpdDate">Date</label>
+                  <input 
+                    type="date" 
+                    id="lastPpdDate" 
+                    name="lastPpdDate" 
+                    class="form-control"
+                  >
+                  <div class="invalid-feedback" id="lastPpdDateError"></div>
+                </div>
+                
+                <div class="form-group col-md-6">
+                  <label for="lastPpdResult">Result</label>
+                  <input 
+                    type="text" 
+                    id="lastPpdResult" 
+                    name="lastPpdResult" 
+                    class="form-control"
+                    placeholder="Enter PPD test result"
+                  >
+                  <div class="invalid-feedback" id="lastPpdResultError"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Anergy Results -->
+            <div class="form-group">
+              <label for="anergyResults">Anergy results if available</label>
+              <input 
+                type="text" 
+                id="anergyResults" 
+                name="anergyResults" 
+                class="form-control"
+                placeholder="Enter anergy results if available"
+              >
+              <div class="invalid-feedback" id="anergyResultsError"></div>
+            </div>
+            
+            <!-- 3 Negative AFB -->
+            <div class="form-group">
+              <label>If on tuberculosis treatment, 3 negative AFB?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="negativeAfbYes" name="negativeAfb" value="yes">
+                  <label for="negativeAfbYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="negativeAfbNo" name="negativeAfb" value="no">
+                  <label for="negativeAfbNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="negativeAfbError"></div>
+            </div>
+            
+            <!-- Negative Chest X-Ray -->
+            <div class="form-group">
+              <label>Negative chest x-ray?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="negativeChestXrayYes" name="negativeChestXray" value="yes">
+                  <label for="negativeChestXrayYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="negativeChestXrayNo" name="negativeChestXray" value="no">
+                  <label for="negativeChestXrayNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="negativeChestXrayError"></div>
+            </div>
+          </section>
+          
+          <!-- Mental Status Section -->
+          <section class="form-section">
+            <h3 class="section-title">Mental Status</h3>
+            <p class="section-description">Please provide information about the patient's mental status:</p>
+            
+            <!-- Oriented place and time -->
+            <div class="form-group">
+              <label>Oriented place and time</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="orientedNever" name="orientedStatus" value="never">
+                  <label for="orientedNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="orientedPartial" name="orientedStatus" value="partial">
+                  <label for="orientedPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="orientedTotal" name="orientedStatus" value="total">
+                  <label for="orientedTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="orientedStatusError"></div>
+            </div>
+            
+            <!-- Anxiety -->
+            <div class="form-group">
+              <label>Anxiety</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="anxietyNever" name="anxietyStatus" value="never">
+                  <label for="anxietyNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="anxietyPartial" name="anxietyStatus" value="partial">
+                  <label for="anxietyPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="anxietyTotal" name="anxietyStatus" value="total">
+                  <label for="anxietyTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="anxietyStatusError"></div>
+            </div>
+            
+            <!-- Agitated -->
+            <div class="form-group">
+              <label>Agitated</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="agitatedNever" name="agitatedStatus" value="never">
+                  <label for="agitatedNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="agitatedPartial" name="agitatedStatus" value="partial">
+                  <label for="agitatedPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="agitatedTotal" name="agitatedStatus" value="total">
+                  <label for="agitatedTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="agitatedStatusError"></div>
+            </div>
+            
+            <!-- Short term memory loss -->
+            <div class="form-group">
+              <label>Short term memory loss</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="memoryLossNever" name="memoryLossStatus" value="never">
+                  <label for="memoryLossNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="memoryLossPartial" name="memoryLossStatus" value="partial">
+                  <label for="memoryLossPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="memoryLossTotal" name="memoryLossStatus" value="total">
+                  <label for="memoryLossTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="memoryLossStatusError"></div>
+            </div>
+            
+            <!-- Wanders -->
+            <div class="form-group">
+              <label>Wanders</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="wandersNever" name="wandersStatus" value="never">
+                  <label for="wandersNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="wandersPartial" name="wandersStatus" value="partial">
+                  <label for="wandersPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="wandersTotal" name="wandersStatus" value="total">
+                  <label for="wandersTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="wandersStatusError"></div>
+            </div>
+            
+            <!-- Depression -->
+            <div class="form-group">
+              <label>Depression</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="depressionNever" name="depressionStatus" value="never">
+                  <label for="depressionNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="depressionPartial" name="depressionStatus" value="partial">
+                  <label for="depressionPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="depressionTotal" name="depressionStatus" value="total">
+                  <label for="depressionTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="depressionStatusError"></div>
+            </div>
+            
+            <!-- Impaired judgment -->
+            <div class="form-group">
+              <label>Impaired judgment</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="impairedJudgmentNever" name="impairedJudgmentStatus" value="never">
+                  <label for="impairedJudgmentNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="impairedJudgmentPartial" name="impairedJudgmentStatus" value="partial">
+                  <label for="impairedJudgmentPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="impairedJudgmentTotal" name="impairedJudgmentStatus" value="total">
+                  <label for="impairedJudgmentTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="impairedJudgmentStatusError"></div>
+            </div>
+            
+            <!-- Danger to Others (Aggressive) -->
+            <div class="form-group">
+              <label>Danger to Others (Aggressive)</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="dangerToOthersNever" name="dangerToOthersStatus" value="never">
+                  <label for="dangerToOthersNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="dangerToOthersPartial" name="dangerToOthersStatus" value="partial">
+                  <label for="dangerToOthersPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="dangerToOthersTotal" name="dangerToOthersStatus" value="total">
+                  <label for="dangerToOthersTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="dangerToOthersStatusError"></div>
+            </div>
+            
+            <!-- Danger to Self -->
+            <div class="form-group">
+              <label>Danger to Self</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="dangerToSelfNever" name="dangerToSelfStatus" value="never">
+                  <label for="dangerToSelfNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="dangerToSelfPartial" name="dangerToSelfStatus" value="partial">
+                  <label for="dangerToSelfPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="dangerToSelfTotal" name="dangerToSelfStatus" value="total">
+                  <label for="dangerToSelfTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="dangerToSelfStatusError"></div>
+            </div>
+            
+            <!-- Articulates needs -->
+            <div class="form-group">
+              <label>Articulates needs</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="articulatesNeedsNever" name="articulatesNeedsStatus" value="never">
+                  <label for="articulatesNeedsNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="articulatesNeedsPartial" name="articulatesNeedsStatus" value="partial">
+                  <label for="articulatesNeedsPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="articulatesNeedsTotal" name="articulatesNeedsStatus" value="total">
+                  <label for="articulatesNeedsTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="articulatesNeedsStatusError"></div>
+            </div>
+            
+            <!-- Sleep disorder -->
+            <div class="form-group">
+              <label>Sleep disorder</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="sleepDisorderNever" name="sleepDisorderStatus" value="never">
+                  <label for="sleepDisorderNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="sleepDisorderPartial" name="sleepDisorderStatus" value="partial">
+                  <label for="sleepDisorderPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="sleepDisorderTotal" name="sleepDisorderStatus" value="total">
+                  <label for="sleepDisorderTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="sleepDisorderStatusError"></div>
+            </div>
+            
+            <!-- Abusive to Others -->
+            <div class="form-group">
+              <label>Abusive to Others</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="abusiveToOthersNever" name="abusiveToOthersStatus" value="never">
+                  <label for="abusiveToOthersNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="abusiveToOthersPartial" name="abusiveToOthersStatus" value="partial">
+                  <label for="abusiveToOthersPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="abusiveToOthersTotal" name="abusiveToOthersStatus" value="total">
+                  <label for="abusiveToOthersTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="abusiveToOthersStatusError"></div>
+            </div>
+            
+            <!-- Abusive to Self -->
+            <div class="form-group">
+              <label>Abusive to Self</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="abusiveToSelfNever" name="abusiveToSelfStatus" value="never">
+                  <label for="abusiveToSelfNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="abusiveToSelfPartial" name="abusiveToSelfStatus" value="partial">
+                  <label for="abusiveToSelfPartial">Partial</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="abusiveToSelfTotal" name="abusiveToSelfStatus" value="total">
+                  <label for="abusiveToSelfTotal">Total</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="abusiveToSelfStatusError"></div>
+            </div>
+            
+            <!-- Other cognitive/Mental status information -->
+            <div class="form-group">
+              <label for="otherMentalStatus">Other cognitive/Mental status information</label>
+              <textarea 
+                id="otherMentalStatus" 
+                name="otherMentalStatus" 
+                class="form-control"
+                placeholder="Please provide any additional information about the patient's mental status"
+                rows="3"
+              ></textarea>
+              <div class="invalid-feedback" id="otherMentalStatusError"></div>
+            </div>
+          </section>
+          
+          <!-- Patient Ability to Take/Administer Medication Section -->
+          <section class="form-section">
+            <h3 class="section-title">Patient Ability to Take/Administer Medication</h3>
+            <p class="section-description">Please indicate the patient's ability to manage medications:</p>
+            
+            <!-- Totally independent -->
+            <div class="form-group">
+              <label>Totally independent</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="independentNever" name="independentStatus" value="never">
+                  <label for="independentNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="independentSometimes" name="independentStatus" value="sometimes">
+                  <label for="independentSometimes">Sometimes*</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="independentAlways" name="independentStatus" value="always">
+                  <label for="independentAlways">Always</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="independentStatusError"></div>
+            </div>
+            
+            <!-- Needs reminding -->
+            <div class="form-group">
+              <label>Needs reminding</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="needsRemindingNever" name="needsRemindingStatus" value="never">
+                  <label for="needsRemindingNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="needsRemindingSometimes" name="needsRemindingStatus" value="sometimes">
+                  <label for="needsRemindingSometimes">Sometimes*</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="needsRemindingAlways" name="needsRemindingStatus" value="always">
+                  <label for="needsRemindingAlways">Always</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="needsRemindingStatusError"></div>
+            </div>
+            
+            <!-- Non-compliant -->
+            <div class="form-group">
+              <label>Non-compliant</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="nonCompliantNever" name="nonCompliantStatus" value="never">
+                  <label for="nonCompliantNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="nonCompliantSometimes" name="nonCompliantStatus" value="sometimes">
+                  <label for="nonCompliantSometimes">Sometimes*</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="nonCompliantAlways" name="nonCompliantStatus" value="always">
+                  <label for="nonCompliantAlways">Always</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="nonCompliantStatusError"></div>
+            </div>
+            
+            <!-- Needs help preparing -->
+            <div class="form-group">
+              <label>Needs help preparing</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="needsHelpPreparingNever" name="needsHelpPreparingStatus" value="never">
+                  <label for="needsHelpPreparingNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="needsHelpPreparingSometimes" name="needsHelpPreparingStatus" value="sometimes">
+                  <label for="needsHelpPreparingSometimes">Sometimes*</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="needsHelpPreparingAlways" name="needsHelpPreparingStatus" value="always">
+                  <label for="needsHelpPreparingAlways">Always</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="needsHelpPreparingStatusError"></div>
+            </div>
+            
+            <!-- Needs administration -->
+            <div class="form-group">
+              <label>Needs administration</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="needsAdministrationNever" name="needsAdministrationStatus" value="never">
+                  <label for="needsAdministrationNever">Never</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="needsAdministrationSometimes" name="needsAdministrationStatus" value="sometimes">
+                  <label for="needsAdministrationSometimes">Sometimes*</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="needsAdministrationAlways" name="needsAdministrationStatus" value="always">
+                  <label for="needsAdministrationAlways">Always</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="needsAdministrationStatusError"></div>
+            </div>
+            
+            <!-- Patient/Care giver can be taught to administer -->
+            <div class="form-group">
+              <label>Patient/Care giver can be taught to administer</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="canBeTaughtYes" name="canBeTaught" value="yes">
+                  <label for="canBeTaughtYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="canBeTaughtNo" name="canBeTaught" value="no">
+                  <label for="canBeTaughtNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="canBeTaughtError"></div>
+            </div>
+            
+            <!-- Please Explain -->
+            <div class="form-group">
+              <label for="explainTeaching">Please Explain</label>
+              <textarea 
+                id="explainTeaching" 
+                name="explainTeaching" 
+                class="form-control"
+                placeholder="Please provide an explanation"
+                rows="3"
+              ></textarea>
+              <div class="invalid-feedback" id="explainTeachingError"></div>
+            </div>
+            
+            <!-- Arrangements for medication administration -->
+            <div class="form-group">
+              <label for="medicationArrangements">If patient is not independent, what arrangements have been made to administer medications?</label>
+              <textarea 
+                id="medicationArrangements" 
+                name="medicationArrangements" 
+                class="form-control"
+                placeholder="Describe the arrangements made for medication administration"
+                rows="3"
+              ></textarea>
+              <div class="invalid-feedback" id="medicationArrangementsError"></div>
+            </div>
+            
+            <!-- Medication List Table -->
+            <div class="form-group">
+              <label>Medications</label>
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Medication Name</th>
+                      <th>Dosage</th>
+                      <th>Frequency</th>
+                      <th>Route</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="medicationTableBody">
+                    <tr class="medication-row" data-index="0">
+                      <td>1</td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="medicationName0" 
+                          name="medications[0].name" 
+                          class="form-control" 
+                          placeholder="Medication name"
+                        >
+                        <div class="invalid-feedback" id="medicationNameError0"></div>
+                      </td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="medicationDosage0" 
+                          name="medications[0].dosage" 
+                          class="form-control" 
+                          placeholder="Dosage"
+                        >
+                      </td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="medicationFrequency0" 
+                          name="medications[0].frequency" 
+                          class="form-control" 
+                          placeholder="Frequency"
+                        >
+                      </td>
+                      <td>
+                        <input 
+                          type="text" 
+                          id="medicationRoute0" 
+                          name="medications[0].route" 
+                          class="form-control" 
+                          placeholder="Route"
+                        >
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-danger btn-sm remove-medication-btn" data-index="0">
+                          <i class="fas fa-times"></i> Remove
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" id="addMedicationBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Medication
+              </button>
+            </div>
+          </section>
+          
+          <!-- Patient's Personal Service Needs Section -->
+          <section class="form-section">
+            <h3 class="section-title">Indicate Patient's Personal Service Needs</h3>
+            <p class="section-description">Please select the assistance level required for each personal service:</p>
+            
+            <div class="table-container">
+              <table class="data-table personal-service-needs-table">
+                <thead>
+                  <tr>
+                    <th width="40%">Service</th>
+                    <th width="20%">Independent</th>
+                    <th width="20%">Partial Assist</th>
+                    <th width="20%">Total Assist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Grooming</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="groomingIndependent" name="groomingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="groomingPartial" name="groomingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="groomingTotal" name="groomingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Dressing</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="dressingIndependent" name="dressingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="dressingPartial" name="dressingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="dressingTotal" name="dressingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Washing</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="washingIndependent" name="washingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="washingPartial" name="washingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="washingTotal" name="washingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Bathing</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="bathingIndependent" name="bathingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="bathingPartial" name="bathingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="bathingTotal" name="bathingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Feeding</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="feedingIndependent" name="feedingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="feedingPartial" name="feedingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="feedingTotal" name="feedingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Meal Prep</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="mealPrepIndependent" name="mealPrepIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="mealPrepPartial" name="mealPrepPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="mealPrepTotal" name="mealPrepTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Reheat Meals</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="reheatMealsIndependent" name="reheatMealsIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="reheatMealsPartial" name="reheatMealsPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="reheatMealsTotal" name="reheatMealsTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Toileting / Bathroom</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="toiletingIndependent" name="toiletingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="toiletingPartial" name="toiletingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="toiletingTotal" name="toiletingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-4">Urinal or bedpan</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="urinalIndependent" name="urinalIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="urinalPartial" name="urinalPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="urinalTotal" name="urinalTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-4">Commode</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="commodeIndependent" name="commodeIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="commodePartial" name="commodePartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="commodeTotal" name="commodeTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="pl-4">Catheter</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="catheterIndependent" name="catheterIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="catheterPartial" name="catheterPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="catheterTotal" name="catheterTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Laundry</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="laundryIndependent" name="laundryIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="laundryPartial" name="laundryPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="laundryTotal" name="laundryTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Shopping</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="shoppingIndependent" name="shoppingIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="shoppingPartial" name="shoppingPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="shoppingTotal" name="shoppingTotal" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Housecleaning</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="housecleaningIndependent" name="housecleaningIndependent" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="housecleaningPartial" name="housecleaningPartial" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="housecleaningTotal" name="housecleaningTotal" value="true">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Homebound Question -->
+            <div class="form-group mt-4">
+              <label>Is the patient homebound?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="homeboundYes" name="isHomebound" value="yes">
+                  <label for="homeboundYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="homeboundNo" name="isHomebound" value="no">
+                  <label for="homeboundNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="isHomeboundError"></div>
+              <p class="text-muted mt-2">If patient is not homebound, you must submit justification of home care separately</p>
+            </div>
+          </section>
+          
+          <!-- Identification of Service Needs Section -->
+          <section class="form-section">
+            <h3 class="section-title">Identification of Service Needs</h3>
+            <p class="section-description">Please indicate the level of assistance required for each activity:</p>
+            
+            <div class="table-container">
+              <table class="data-table service-needs-table">
+                <thead>
+                  <tr>
+                    <th width="25%">Activity</th>
+                    <th width="12.5%">Without help</th>
+                    <th width="12.5%">With cane</th>
+                    <th width="12.5%">With walker</th>
+                    <th width="12.5%">With wheelchair</th>
+                    <th width="12.5%">With personal assistance</th>
+                    <th width="12.5%">Unable</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ambulate inside</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambInsideNoHelp" name="ambInsideNoHelp" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambInsideCane" name="ambInsideCane" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambInsideWalker" name="ambInsideWalker" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambInsideWheelchair" name="ambInsideWheelchair" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambInsideAssistance" name="ambInsideAssistance" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambInsideUnable" name="ambInsideUnable" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Ambulate outside</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambOutsideNoHelp" name="ambOutsideNoHelp" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambOutsideCane" name="ambOutsideCane" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambOutsideWalker" name="ambOutsideWalker" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambOutsideWheelchair" name="ambOutsideWheelchair" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambOutsideAssistance" name="ambOutsideAssistance" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="ambOutsideUnable" name="ambOutsideUnable" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Get up from seated position</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpSeatedNoHelp" name="getUpSeatedNoHelp" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpSeatedCane" name="getUpSeatedCane" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpSeatedWalker" name="getUpSeatedWalker" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpSeatedWheelchair" name="getUpSeatedWheelchair" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpSeatedAssistance" name="getUpSeatedAssistance" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpSeatedUnable" name="getUpSeatedUnable" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Get up from bed</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpBedNoHelp" name="getUpBedNoHelp" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpBedCane" name="getUpBedCane" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpBedWalker" name="getUpBedWalker" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpBedWheelchair" name="getUpBedWheelchair" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpBedAssistance" name="getUpBedAssistance" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="getUpBedUnable" name="getUpBedUnable" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Transfer to: commode</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferCommodeNoHelp" name="transferCommodeNoHelp" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferCommodeCane" name="transferCommodeCane" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferCommodeWalker" name="transferCommodeWalker" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferCommodeWheelchair" name="transferCommodeWheelchair" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferCommodeAssistance" name="transferCommodeAssistance" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferCommodeUnable" name="transferCommodeUnable" value="true">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Transfer to: Wheelchair</td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferWheelchairNoHelp" name="transferWheelchairNoHelp" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferWheelchairCane" name="transferWheelchairCane" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferWheelchairWalker" name="transferWheelchairWalker" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferWheelchairWheelchair" name="transferWheelchairWheelchair" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferWheelchairAssistance" name="transferWheelchairAssistance" value="true">
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" id="transferWheelchairUnable" name="transferWheelchairUnable" value="true">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          
+          <!-- Medical Treatment Section -->
+          <section class="form-section">
+            <h3 class="section-title">Medical Treatment</h3>
+            <p class="section-description"><strong>( Check all that apply )</strong></p>
+            <p class="text-muted">Please list all medications on AI485</p>
+            
+            <div class="form-group">
+              <div class="checkbox-grid">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="decubitusCare" name="decubitusCare" value="true">
+                  <label for="decubitusCare">Decubitus care</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="dressingsSimple" name="dressingsSimple" value="true">
+                  <label for="dressingsSimple">Dressings - Simple</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="dressingsSterile" name="dressingsSterile" value="true">
+                  <label for="dressingsSterile">Dressings - Sterile</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="enema" name="enema" value="true">
+                  <label for="enema">Enema</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="catheterCare" name="catheterCare" value="true">
+                  <label for="catheterCare">Catheter care</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="monitorVitalSigns" name="monitorVitalSigns" value="true">
+                  <label for="monitorVitalSigns">Monitor vital Signs</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="tubeFeeding" name="tubeFeeding" value="true">
+                  <label for="tubeFeeding">Tube Feeding</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="tubeIrrigation" name="tubeIrrigation" value="true">
+                  <label for="tubeIrrigation">Tube irrigation</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="suctioning" name="suctioning" value="true">
+                  <label for="suctioning">Suctioning</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="oxygenAdministration" name="oxygenAdministration" value="true">
+                  <label for="oxygenAdministration">Oxygen administration</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="bloodTests" name="bloodTests" value="true">
+                  <label for="bloodTests">Blood tests</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="ambulationExercise" name="ambulationExercise" value="true">
+                  <label for="ambulationExercise">Ambulation exercise</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="rehabilitationTherapy" name="rehabilitationTherapy" value="true">
+                  <label for="rehabilitationTherapy">Rehabilitation therapy</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="physicalTherapy" name="physicalTherapy" value="true">
+                  <label for="physicalTherapy">Physical therapy</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="medicalTreatmentError"></div>
+            </div>
+          </section>
+          
+          <!-- Elimination Section -->
+          <section class="form-section">
+            <h3 class="section-title">Elimination</h3>
+            <p class="section-description">Please indicate the patient's elimination status:</p>
+            
+            <!-- Continent -->
+            <div class="form-group">
+              <label>Continent</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="continentBowel" name="continentBowel" value="true">
+                  <label for="continentBowel">Bowel</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="continentBladder" name="continentBladder" value="true">
+                  <label for="continentBladder">Bladder</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="continentError"></div>
+            </div>
+            
+            <!-- Occasionally Incontinent -->
+            <div class="form-group">
+              <label>Occasionally Incontinent</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="occasionallyIncontinentBowel" name="occasionallyIncontinentBowel" value="true">
+                  <label for="occasionallyIncontinentBowel">Bowel</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="occasionallyIncontinentBladder" name="occasionallyIncontinentBladder" value="true">
+                  <label for="occasionallyIncontinentBladder">Bladder</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="occasionallyIncontinentError"></div>
+            </div>
+            
+            <!-- Incontinent -->
+            <div class="form-group">
+              <label>Incontinent</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="incontinentBowel" name="incontinentBowel" value="true">
+                  <label for="incontinentBowel">Bowel</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="incontinentBladder" name="incontinentBladder" value="true">
+                  <label for="incontinentBladder">Bladder</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="incontinentError"></div>
+            </div>
+          </section>
+          
+          <!-- Patient Status -->
+          <section class="form-section">
+            <h3 class="section-title">Patient Status</h3>
+            <p class="section-description">Please provide information about the patient's current status:</p>
+            
+            <!-- Is Patient Alert -->
+            <div class="form-group">
+              <label>Is Patient Alert</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="alertAlways" name="patientAlert" value="always">
+                  <label for="alertAlways">Always</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="alertSometimes" name="patientAlert" value="sometimes">
+                  <label for="alertSometimes">Sometimes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="alertNever" name="patientAlert" value="never">
+                  <label for="alertNever">Never</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="patientAlertError"></div>
+            </div>
+            
+            <!-- Patient Height and Weight -->
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="patientHeight">Patient Height (in)</label>
+                <input 
+                  type="number" 
+                  id="patientHeight" 
+                  name="patientHeight" 
+                  class="form-control"
+                  step="0.1"
+                  min="0"
+                  placeholder="Enter height in inches"
+                >
+                <div class="invalid-feedback" id="patientHeightError"></div>
+              </div>
+              
+              <div class="form-group col-md-6">
+                <label for="patientWeight">Patient Weight (lbs)</label>
+                <input 
+                  type="number" 
+                  id="patientWeight" 
+                  name="patientWeight" 
+                  class="form-control"
+                  step="0.1"
+                  min="0"
+                  placeholder="Enter weight in pounds"
+                >
+                <div class="invalid-feedback" id="patientWeightError"></div>
+              </div>
+            </div>
+            
+            <!-- Can Patient Direct Home Care Worker -->
+            <div class="form-group">
+              <label>Can Patient Direct Home Care Worker</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="directCareYes" name="canDirectCare" value="yes">
+                  <label for="directCareYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="directCareNo" name="canDirectCare" value="no">
+                  <label for="directCareNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="canDirectCareError"></div>
+            </div>
+            
+            <!-- Who is Responsible (conditional) -->
+            <div id="responsiblePersonGroup" class="form-group" style="display:none;">
+              <label for="responsiblePerson">Who is responsible for directing home care workers?</label>
+              <input 
+                type="text" 
+                id="responsiblePerson" 
+                name="responsiblePerson" 
+                class="form-control"
+                placeholder="Start typing a name"
+                list="contactsList"
+              >
+              <datalist id="contactsList">
+                <!-- Options will be populated from emergency contacts -->
+              </datalist>
+              <div class="invalid-feedback" id="responsiblePersonError"></div>
+            </div>
+            
+            <!-- Recent Weight Loss -->
+            <div class="form-group">
+              <label>Recent Significant Weight Loss</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="weightLossYes" name="recentWeightLoss" value="yes">
+                  <label for="weightLossYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="weightLossNo" name="recentWeightLoss" value="no">
+                  <label for="weightLossNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="recentWeightLossError"></div>
+            </div>
+            
+            <!-- Weight Loss Amount (conditional) -->
+            <div id="weightLossAmountGroup" class="form-group" style="display:none;">
+              <label for="weightLossAmount">Amount Lost (lbs)</label>
+              <input 
+                type="number" 
+                id="weightLossAmount" 
+                name="weightLossAmount" 
+                class="form-control"
+                step="0.1"
+                min="0"
+                placeholder="Enter amount in pounds"
+              >
+              <div class="invalid-feedback" id="weightLossAmountError"></div>
+            </div>
+          </section>
+          
+          <!-- Hospitalization Information -->
+          <section class="form-section">
+            <h3 class="section-title">Hospitalization Information</h3>
+            <p class="section-description">Please provide details about recent hospitalization:</p>
+            
+            <div class="form-group">
+              <label for="hospitalName">Hospital Name</label>
+              <input 
+                type="text" 
+                id="hospitalName" 
+                name="hospitalName" 
+                class="form-control"
+                placeholder="Enter hospital name"
+              >
+              <div class="invalid-feedback" id="hospitalNameError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="hospitalAddress">Hospital Address</label>
+              <input 
+                type="text" 
+                id="hospitalAddress" 
+                name="hospitalAddress" 
+                class="form-control"
+                placeholder="Enter hospital address"
+              >
+              <div class="invalid-feedback" id="hospitalAddressError"></div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="hospitalFrom">Hospitalized From</label>
+                <input 
+                  type="date" 
+                  id="hospitalFrom" 
+                  name="hospitalFrom" 
+                  class="form-control"
+                >
+                <div class="invalid-feedback" id="hospitalFromError"></div>
+              </div>
+              
+              <div class="form-group col-md-6">
+                <label for="hospitalTo">Hospitalized To</label>
+                <input 
+                  type="date" 
+                  id="hospitalTo" 
+                  name="hospitalTo" 
+                  class="form-control"
+                >
+                <div class="invalid-feedback" id="hospitalToError"></div>
+              </div>
+            </div>
+            
+            <!-- Diagnoses Table -->
+            <div class="table-container">
+              <h5 class="table-heading">Diagnoses</h5>
+              <p class="table-description">List all diagnoses received during hospitalization:</p>
+              
+              <table class="data-table diagnoses-table">
+                <thead>
+                  <tr>
+                    <th width="5%">#</th>
+                    <th width="45%">Diagnosis <span class="required">*</span></th>
+                    <th width="35%">Notes</th>
+                    <th width="15%">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="diagnosisTableBody">
+                  <tr class="diagnosis-row" data-index="0">
+                    <td>1</td>
+                    <td>
+                      <input 
+                        type="text" 
+                        id="diagnosis0" 
+                        name="diagnoses[0].name" 
+                        class="form-control"
+                        placeholder="e.g., Hypertension, Diabetes"
+                        required
+                      >
+                      <div class="invalid-feedback" id="diagnosisError0"></div>
+                    </td>
+                    <td>
+                      <textarea 
+                        id="diagnosisNotes0" 
+                        name="diagnoses[0].notes" 
+                        class="form-control"
+                        placeholder="Additional details about the diagnosis"
+                        rows="2"
+                      ></textarea>
+                    </td>
+                    <td class="action-cell">
+                      <button type="button" class="btn btn-outline-danger btn-sm remove-diagnosis" data-index="0">
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4">
+                      <button type="button" id="addDiagnosis" class="btn btn-outline-primary btn-sm">
+                        <i class="icon-plus"></i> Add Diagnosis
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </section>
+          
+          <!-- Dementia Screening Interview Section -->
+          <section class="form-section">
+            <h3 class="section-title">Dementia Screening Interview</h3>
+            
+            <div class="form-group">
+              <label>Is the patient diagnosed with Dementia?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="dementiaYes" name="hasDementia" value="yes">
+                  <label for="dementiaYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="dementiaNo" name="hasDementia" value="no">
+                  <label for="dementiaNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="hasDementiaError"></div>
+            </div>
+            
+            <div class="form-group" id="dementiaDiagnosisDateGroup" style="display: none;">
+              <label for="dementiaDiagnosisDate">When?</label>
+              <input type="date" id="dementiaDiagnosisDate" name="dementiaDiagnosisDate" class="form-control">
+              <div class="invalid-feedback" id="dementiaDiagnosisDateError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="dementiaScreeningDate">Date</label>
+              <input type="date" id="dementiaScreeningDate" name="dementiaScreeningDate" class="form-control">
+              <div class="invalid-feedback" id="dementiaScreeningDateError"></div>
+            </div>
+            
+            <div class="screening-items">
+              <h4>Dementia Screening Evaluation</h4>
+              <p class="screening-instruction">For each item below, select one option that best applies:</p>
+              <p class="screening-instruction important-note">Remember, Yes, a change indicates that there has been a change in the last several years caused by cognitive (thinking and memory) problems.</p>
+              
+              <!-- Item 1: Problems with judgment -->
+              <div class="screening-item">
+                <p class="screening-question">Problems with judgment (e.g., problems making decisions, bad financial decisions, problems with thinking)</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="judgmentChange" name="judgmentProblems" value="yes">
+                    <label for="judgmentChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="judgmentNoChange" name="judgmentProblems" value="no">
+                    <label for="judgmentNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="judgmentNA" name="judgmentProblems" value="na">
+                    <label for="judgmentNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="judgmentProblemsError"></div>
+              </div>
+              
+              <!-- Item 2: Less interest in hobbies/activities -->
+              <div class="screening-item">
+                <p class="screening-question">Less interest in hobbies/activities</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="hobbiesChange" name="hobbiesInterest" value="yes">
+                    <label for="hobbiesChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="hobbiesNoChange" name="hobbiesInterest" value="no">
+                    <label for="hobbiesNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="hobbiesNA" name="hobbiesInterest" value="na">
+                    <label for="hobbiesNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="hobbiesInterestError"></div>
+              </div>
+              
+              <!-- Item 3: Repeats things -->
+              <div class="screening-item">
+                <p class="screening-question">Repeats the same things over and over (questions, stories, or statements)</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="repeatsChange" name="repeatsThings" value="yes">
+                    <label for="repeatsChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="repeatsNoChange" name="repeatsThings" value="no">
+                    <label for="repeatsNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="repeatsNA" name="repeatsThings" value="na">
+                    <label for="repeatsNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="repeatsThingsError"></div>
+              </div>
+              
+              <!-- Item 4: Trouble learning to use tools -->
+              <div class="screening-item">
+                <p class="screening-question">Trouble learning how to use a tool, appliance, or gadget (e.g., VCR, computer, microwave, remote control)</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="toolsChange" name="toolsLearning" value="yes">
+                    <label for="toolsChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="toolsNoChange" name="toolsLearning" value="no">
+                    <label for="toolsNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="toolsNA" name="toolsLearning" value="na">
+                    <label for="toolsNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="toolsLearningError"></div>
+              </div>
+              
+              <!-- Item 5: Forgets month or year -->
+              <div class="screening-item">
+                <p class="screening-question">Forgets correct month or year</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="dateChange" name="forgetsDate" value="yes">
+                    <label for="dateChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="dateNoChange" name="forgetsDate" value="no">
+                    <label for="dateNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="dateNA" name="forgetsDate" value="na">
+                    <label for="dateNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="forgetsDateError"></div>
+              </div>
+              
+              <!-- Item 6: Trouble with financial affairs -->
+              <div class="screening-item">
+                <p class="screening-question">Trouble handling complicated financial affairs (e.g., balancing checkbook, income taxes, paying bills)</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="financialChange" name="financialTrouble" value="yes">
+                    <label for="financialChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="financialNoChange" name="financialTrouble" value="no">
+                    <label for="financialNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="financialNA" name="financialTrouble" value="na">
+                    <label for="financialNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="financialTroubleError"></div>
+              </div>
+              
+              <!-- Item 7: Daily problems with thinking/memory -->
+              <div class="screening-item">
+                <p class="screening-question">Daily problems with thinking and/or memory</p>
+                <div class="checkbox-grid">
+                  <div class="checkbox-item">
+                    <input type="radio" id="thinkingChange" name="thinkingProblems" value="yes">
+                    <label for="thinkingChange">Yes, a change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="thinkingNoChange" name="thinkingProblems" value="no">
+                    <label for="thinkingNoChange">No, No change</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="radio" id="thinkingNA" name="thinkingProblems" value="na">
+                    <label for="thinkingNA">N/A, Don't Know</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback" id="thinkingProblemsError"></div>
+              </div>
+              
+              <!-- Total Score -->
+              <div class="form-group mt-4">
+                <label for="dementiaScore">Total Score</label>
+                <input type="text" id="dementiaScore" name="dementiaScore" class="form-control">
+                <div class="invalid-feedback" id="dementiaScoreError"></div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- For New Home Care Applicant Only Section -->
+          <section class="form-section">
+            <h3 class="section-title">For New Home Care Applicant Only</h3>
+            
+            <div class="form-group">
+              <label>How was the applicant referred to your agency?</label>
+              <div class="checkbox-grid">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="referralDoctor" name="referralDoctor" value="true">
+                  <label for="referralDoctor">Doctor</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="referralSocialWorker" name="referralSocialWorker" value="true">
+                  <label for="referralSocialWorker">Social Worker</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="referralDischargePlanner" name="referralDischargePlanner" value="true">
+                  <label for="referralDischargePlanner">Discharge Planner</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="referralOther" name="referralOther" value="true">
+                  <label for="referralOther">Other</label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group" id="referralExplainGroup" style="display: none;">
+              <label for="referralExplain">Please Explain:</label>
+              <input type="text" id="referralExplain" name="referralExplain" class="form-control">
+              <div class="invalid-feedback" id="referralExplainError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="referralLocation">Location:</label>
+              <input type="text" id="referralLocation" name="referralLocation" class="form-control">
+              <div class="invalid-feedback" id="referralLocationError"></div>
+            </div>
+          </section>
+          
+          <!-- Certification Section -->
+          <section class="form-section">
+            <h3 class="section-title">Certification</h3>
+            
+            <!-- Assessment based on observation -->
+            <div class="form-group">
+              <label>This assessment is based on personal observation of the patient:</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="personalObservationYes" name="personalObservation" value="yes">
+                  <label for="personalObservationYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="personalObservationNo" name="personalObservation" value="no">
+                  <label for="personalObservationNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="personalObservationError"></div>
+            </div>
+            
+            <!-- Information relayed by -->
+            <div class="form-group" id="relayedInfoGroup">
+              <label for="relayedInfoBy">This assessment is based on information relayed to me by:</label>
+              <input type="text" id="relayedInfoBy" name="relayedInfoBy" class="form-control">
+              <div class="invalid-feedback" id="relayedInfoByError"></div>
+            </div>
+            
+            <!-- Preparer information -->
+            <div class="form-group">
+              <label for="preparedBy">Prepared by: (print name)</label>
+              <input type="text" id="preparedBy" name="preparedBy" class="form-control">
+              <div class="invalid-feedback" id="preparedByError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="preparedByPhone">Phone #</label>
+              <input type="tel" id="preparedByPhone" name="preparedByPhone" class="form-control" placeholder="e.g., (555) 123-4567">
+              <div class="invalid-feedback" id="preparedByPhoneError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="agencyAffiliation">Agency Affiliation</label>
+              <input type="text" id="agencyAffiliation" name="agencyAffiliation" class="form-control">
+              <div class="invalid-feedback" id="agencyAffiliationError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="faxNumber">Fax #</label>
+              <input type="tel" id="faxNumber" name="faxNumber" class="form-control" placeholder="e.g., (555) 123-4567">
+              <div class="invalid-feedback" id="faxNumberError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="certificationDate">Date</label>
+              <input type="date" id="certificationDate" name="certificationDate" class="form-control">
+              <div class="invalid-feedback" id="certificationDateError"></div>
+            </div>
+            
+            <!-- Other agency providing services -->
+            <div class="form-group">
+              <label>Is any other agency/vendor providing services in the home to the patient?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="otherAgencyYes" name="otherAgency" value="yes">
+                  <label for="otherAgencyYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="otherAgencyNo" name="otherAgency" value="no">
+                  <label for="otherAgencyNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="otherAgencyError"></div>
+            </div>
+            
+            <!-- Other agency details (conditional) -->
+            <div class="form-row" id="otherAgencyDetailsGroup" style="display: none;">
+              <div class="form-group col-md-6">
+                <label for="otherAgencyName">Agency Name</label>
+                <input type="text" id="otherAgencyName" name="otherAgencyName" class="form-control">
+                <div class="invalid-feedback" id="otherAgencyNameError"></div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="otherAgencyServices">Services</label>
+                <input type="text" id="otherAgencyServices" name="otherAgencyServices" class="form-control">
+                <div class="invalid-feedback" id="otherAgencyServicesError"></div>
+              </div>
+            </div>
+            
+            <!-- Insurance benefits -->
+            <div class="form-group">
+              <label>Have all home care insurance benefits been exhausted?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="benefitsExhaustedYes" name="benefitsExhausted" value="yes">
+                  <label for="benefitsExhaustedYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="benefitsExhaustedNo" name="benefitsExhausted" value="no">
+                  <label for="benefitsExhaustedNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="benefitsExhaustedError"></div>
+            </div>
+            
+            <!-- Medicaid eligibility -->
+            <div class="form-group">
+              <label>Is this patient eligible for Medicaid?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="medicaidEligibleYes" name="medicaidEligible" value="yes">
+                  <label for="medicaidEligibleYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="medicaidEligibleNo" name="medicaidEligible" value="no">
+                  <label for="medicaidEligibleNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="medicaidEligibleError"></div>
+            </div>
+            
+            <!-- Medicaid application -->
+            <div class="form-group">
+              <label>Have they applied to Medicaid?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="medicaidAppliedYes" name="medicaidApplied" value="yes">
+                  <label for="medicaidAppliedYes">Yes</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="medicaidAppliedNo" name="medicaidApplied" value="no">
+                  <label for="medicaidAppliedNo">No</label>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="medicaidAppliedError"></div>
+            </div>
+            
+            <!-- Reasons for not applying (conditional) -->
+            <div class="form-group" id="medicaidReasonsGroup" style="display: none;">
+              <label for="medicaidReasons">State reasons for not applying to Medicaid:</label>
+              <textarea id="medicaidReasons" name="medicaidReasons" class="form-control" rows="3"></textarea>
+              <div class="invalid-feedback" id="medicaidReasonsError"></div>
+            </div>
+          </section>
+          
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" id="resetButton" class="btn btn-secondary">
+              Clear Form
+            </button>
+            <button type="button" id="printButton" class="btn btn-info">
+              <i class="icon-print"></i> Print PDF
+            </button>
+            <button type="submit" id="submitButton" class="btn btn-primary">
+              <span id="loadingSpinner" class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span>
+              <span id="submitText">Submit</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+    
+    <footer class="app-footer">
+      <div class="container">
+        <p>&copy; <span id="currentYear"></span> Healthcare Provider. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
